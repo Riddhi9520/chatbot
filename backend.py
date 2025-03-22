@@ -1,10 +1,6 @@
 import os
 import google.generativeai as genai
 import mysql.connector
-from dotenv import load_dotenv
-
-load_dotenv()
-API_KEY = os.getenv("GOOGLE_API_KEY")
 
 genai.configure(api_key=API_KEY)
 
@@ -32,6 +28,7 @@ def save_chat(user_input, bot_response):
     except Exception as e:
         print(f"Database Error: {e}")
 
+genai.configure(api_key="AIzaSyAYlRenvT1Q99YEZdBHjko48Riz29jPb7U")
 
 # Create the model
 generation_config = {
