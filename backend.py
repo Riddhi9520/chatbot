@@ -17,10 +17,42 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",        # Change if needed
         user="root",             # Your MySQL username
-        password="root", # Your MySQL password
+        password="", # Your MySQL password
         database="chatbot"  # Database name
     )
+    
+    
+import mysql.connector
 
+def load_chat_history():
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="chatbot"
+    )
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT 'user' AS role, user_message AS content FROM chat_history "
+                   "UNION ALL "
+                   "SELECT 'assistant' AS role, bot_response AS content FROM chat_history "
+                   "ORDER BY role ASC")
+    chat_history = cursor.fetchall()
+    connection.close()
+    return chat_history
+
+def delete_chat_history():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        query = "DELETE FROM chat_history"  # Delete all rows from the chat_history table
+        cursor.execute(query)
+
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Database Error: {e}")
+        
 # Function to Save Chat to Database
 def save_chat(user_input, bot_response):
     try:
